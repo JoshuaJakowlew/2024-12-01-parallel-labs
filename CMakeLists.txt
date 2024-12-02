@@ -10,6 +10,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
 find_package(spdlog REQUIRED)
 find_package(range-v3 REQUIRED)
 find_package(bshoshany-thread-pool REQUIRED)
+find_package(nlohmann_json REQUIRED)
+find_package(gmp REQUIRED)
 
 # TODO: Refactor me
 
@@ -99,4 +101,50 @@ target_link_libraries(wc
     spdlog::spdlog
     range-v3::range-v3
     bshoshany-thread-pool::bshoshany-thread-pool
+)
+
+# BFS
+
+add_executable(bfs
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/bfs.cpp
+)
+
+set_target_properties(bfs PROPERTIES
+    CXX_STANDARD          20
+    CXX_STANDARD_REQUIRED TRUE
+)
+
+target_include_directories(bfs
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+)
+
+target_link_libraries(bfs
+    spdlog::spdlog
+    bshoshany-thread-pool::bshoshany-thread-pool
+    nlohmann_json::nlohmann_json
+)
+
+# Fibonacci
+
+add_executable(fib
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/fib.cpp
+)
+
+set_target_properties(fib PROPERTIES
+    CXX_STANDARD          20
+    CXX_STANDARD_REQUIRED TRUE
+)
+
+target_include_directories(fib
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+)
+
+target_link_libraries(fib
+    spdlog::spdlog
+    bshoshany-thread-pool::bshoshany-thread-pool
+    gmp::gmp
 )
