@@ -51,8 +51,6 @@ int main(int argc, char** argv)
         numbers.emplace_back(std::stoi(line));
     }
 
-    spdlog::info("initial data:\n{}", fmt::join(numbers, ", "));
-
     const auto start = std::chrono::high_resolution_clock::now();
 
     auto max = maximum(numbers, n_workers);

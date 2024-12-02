@@ -187,7 +187,7 @@ std::vector<int> cannon_matmul(std::size_t N, std::size_t n_workers) {
 
 int main(int argc, char** argv)
 {
-    const std::size_t n_points = std::stoull(argv[1]);
+    const std::size_t N = std::stoull(argv[1]);
     const std::size_t n_workers = std::stoull(argv[2]);
-    cannon_matmul(n_points, n_workers);
+    cannon_matmul(N, n_workers);
 }
