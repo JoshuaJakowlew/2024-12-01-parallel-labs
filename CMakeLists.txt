@@ -13,29 +13,48 @@ find_package(bshoshany-thread-pool REQUIRED)
 find_package(nlohmann_json REQUIRED)
 find_package(gmp REQUIRED)
 
-# TODO: Refactor me
+# Cannon
 
-add_executable(${PROJECT_NAME}
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/monte_carlo.cpp
+add_executable(cannon
     ${CMAKE_CURRENT_SOURCE_DIR}/src/cannon.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
 )
 
-set_target_properties(${PROJECT_NAME} PROPERTIES
+set_target_properties(cannon PROPERTIES
     CXX_STANDARD          20
     CXX_STANDARD_REQUIRED TRUE
 )
 
-target_include_directories(${PROJECT_NAME}
+target_include_directories(cannon
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(cannon
     spdlog::spdlog
     range-v3::range-v3
     bshoshany-thread-pool::bshoshany-thread-pool
+)
+
+# Monte-Carlo
+
+add_executable(monte-carlo
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/monte_carlo.cpp
+)
+
+set_target_properties(monte-carlo PROPERTIES
+    CXX_STANDARD          20
+    CXX_STANDARD_REQUIRED TRUE
+)
+
+target_include_directories(monte-carlo
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+)
+
+target_link_libraries(monte-carlo
+    spdlog::spdlog
 )
 
 # Merge sort

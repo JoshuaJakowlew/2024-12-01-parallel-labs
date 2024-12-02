@@ -46,3 +46,17 @@ double monte_carlo_pi(std::size_t n_points, std::size_t n_workers) {
     const double pi_estimate = 4.0 * points_in_circle / n_points;
     return pi_estimate;
 }
+
+int main(int argc, char** argv)
+{
+    const std::size_t n_points = std::stoull(argv[1]);
+    const std::size_t n_workers = std::stoull(argv[2]);
+    const auto n_cores = std::thread::hardware_concurrency(); 
+
+    const auto start = std::chrono::high_resolution_clock::now();
+    const auto pi_estimate = monte_carlo_pi(n_points, n_workers);
+    const auto finish = std::chrono::high_resolution_clock::now();
+    const auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(finish - start).count();
+
+    spdlog::info("PI={} points={} workers={} cores={} time={}", pi_estimate, n_points, n_workers, n_cores, elapsed);
+}
