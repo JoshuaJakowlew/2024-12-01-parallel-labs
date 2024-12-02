@@ -35,3 +35,68 @@ target_link_libraries(${PROJECT_NAME}
     range-v3::range-v3
     bshoshany-thread-pool::bshoshany-thread-pool
 )
+
+# Merge sort
+
+add_executable(merge
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/merge.cpp
+)
+
+set_target_properties(merge PROPERTIES
+    CXX_STANDARD          20
+    CXX_STANDARD_REQUIRED TRUE
+)
+
+target_include_directories(merge
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+)
+
+target_link_libraries(merge
+    spdlog::spdlog
+)
+
+# Max search
+
+add_executable(max
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/max.cpp
+)
+
+set_target_properties(max PROPERTIES
+    CXX_STANDARD          20
+    CXX_STANDARD_REQUIRED TRUE
+)
+
+target_include_directories(max
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+)
+
+target_link_libraries(max
+    spdlog::spdlog
+)
+
+# Word count
+
+add_executable(wc
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/wc.cpp
+)
+
+set_target_properties(wc PROPERTIES
+    CXX_STANDARD          20
+    CXX_STANDARD_REQUIRED TRUE
+)
+
+target_include_directories(wc
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+)
+
+target_link_libraries(wc
+    spdlog::spdlog
+    range-v3::range-v3
+    bshoshany-thread-pool::bshoshany-thread-pool
+)

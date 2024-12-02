@@ -7,35 +7,34 @@
 
 #include <spdlog/spdlog.h>
 
-void sort_chunk(std::span<int> data)
+int max_of(std::span<int> data)
 {
-    std::sort(data.begin(), data.end());
+    return *std::max_element(data.begin(), data.end());
 }
 
-void merge_sort(std::vector<int> & numbers, std::size_t n_workers)
+int maximum(std::vector<int> & numbers, std::size_t n_workers)
 {
     const std::size_t chunk_size = numbers.size() / n_workers;
     const std::size_t chunk_remainder = chunk_size + numbers.size() % n_workers;
     std::vector<std::thread> workers;
+
+    std::vector<int> max_values(n_workers, 0);
+
     for (std::size_t i = 0; i < n_workers - 1; ++i) {
         workers.emplace_back(std::thread([&, i]{
             std::span<int> chunk(numbers.begin() + chunk_size * i, chunk_size);
-            sort_chunk(chunk);
+            max_values[i] = max_of(chunk);
         }));
     }
 
     std::span<int> chunk(numbers.begin() + chunk_size * (n_workers - 1), numbers.end());
-    sort_chunk(chunk);
+    max_values[n_workers - 1] = max_of(chunk);
 
     for (auto & w : workers) {
         w.join();
     }
 
-    auto mid = numbers.begin() + chunk_size;
-    for (std::size_t i = 0; i < n_workers - 1; ++i) {
-        std::inplace_merge(numbers.begin(), mid, mid + (i == n_workers - 2 ? chunk_remainder : chunk_size));
-        mid += chunk_size;
-    }
+    return max_of(max_values);
 }
 
 int main(int argc, char** argv)
@@ -43,7 +42,7 @@ int main(int argc, char** argv)
     const std::string path = argv[1];
     const std::size_t n_workers = std::stoull(argv[2]);
 
-    spdlog::info("Read numbers from {} and sort with {} workers", path, n_workers);
+    spdlog::info("Find max from {} and sort with {} workers", path, n_workers);
 
     std::ifstream file{path};
     std::string line;
@@ -56,14 +55,12 @@ int main(int argc, char** argv)
 
     const auto start = std::chrono::high_resolution_clock::now();
 
-    merge_sort(numbers, n_workers);
+    auto max = maximum(numbers, n_workers);
 
     const auto finish = std::chrono::high_resolution_clock::now();
     const auto elapsed = std::chrono::duration_cast<std::chrono::microseconds>(finish - start).count();
 
-    std::ofstream sorted{fmt::format("{}.sorted", path)};
-    sorted << fmt::format("{}", fmt::join(numbers, ","));
-
+    spdlog::info("max value is {}", max);
     spdlog::info("elapsed: {}mcs {} workers", elapsed, n_workers);
     spdlog::info("{} hw cores", std::thread::hardware_concurrency());
 }
